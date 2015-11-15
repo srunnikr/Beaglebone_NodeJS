@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>BB-Server</title>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>
+</head>
+<body>
+
+
+	<div class="row">
+		<div class="col-md-4">
+			<h3> Beaglebone mbed bridge </h3>
+		</div>
+	</div>
+
+	<div class="row">
+		<p>
+			<div class="col-md-2">
+				<button type="button" class="btn btn-primary btn-block" id="startButton">Start Scan</button>
+			</div>
+			<div class="col-md-2">
+				<button type="button" class="btn btn-primary btn-block" id="stopButton">Stop Scan</button>
+			</div>
+		</p>
+	</div>
+
+	<div class="row">
+		<p>
+			<div class="col-md-2">
+				<button type="button" class="btn btn-primary btn-block" id="startAtDegreeButton">Start at</button>
+			</div>
+			<div class="col-md-2">
+				<input type="number" min="0" max="359" class="form-control" id="degree" placeholder="Degree">
+			</div>
+		</p>
+	</div>
+
+	<div class="row">
+        <p>
+            <div class="col-md-2">
+				    <button type="button" class="btn btn-primary btn-block" id="getCoordinatesButton">Get Obstacles</button>
+            </div>
+        </p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <p>
+                Output :
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <p id="output">
+            </p>
+        </div>
+    </div>
+
+	<script type="text/javascript">
+
+		var socket = io.connect();
+
+		$(document).ready(function() {
+			$('#startButton').click(function() {
+				console.log("button pressed");
+				socket.emit('start_button_pressed');
+			});
+
+			$('#stopButton').click(function() {
+				console.log("button pressed");
+				socket.emit('stop_button_pressed');
+			})
+
+			$('#startAtDegreeButton').click(function() {
+				console.log("button start at degree pressed");
+				var degree = $('#degree').val();
+				if (degree == '') {
+					$('#output').text("ERROR: Enter proper degree value");
+				} else {
+					socket.emit('start_degree', {'degree': degree});
+				}
+			});
+
+			$('#getCoordinatesButton').click(function() {
+				console.log("button get coordinates pressed");
+				socket.emit('get_coordinates');
+			});
+
+		});
+	</script>
+</body>
+</html>
